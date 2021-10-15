@@ -5,6 +5,7 @@ import csv
 import requests
 import pandas as pd
 import numpy as np
+import pickle
 from itertools import chain
 from csv import writer
 from bs4 import BeautifulSoup
@@ -41,6 +42,7 @@ def scrape_rm(soup) :
 	""" Assign correct date  """
 	auction = soup.title.text
 	auction = auction.split(' ')
+	print(auction)
 	if auction[0] == 'Hilton' :
 		date.append('11/05/' + str(auction[2]))
 	elif auction[0] == 'Hershey' :
@@ -65,6 +67,35 @@ def scrape_rm(soup) :
 		date.append('04/03/' + str(auction[2]))
 	elif auction[0] == 'Arizona' :
 		date.append('01/29/' + str(auction[1]))
+	elif auction[3] == 'Museum' :
+		date.append('12/08/' + str(auction[5]))
+	elif auction[2] == '70th' :
+		date.append('10/27/' + str(auction[5]))
+	elif auction[1] == 'Dingman' :
+		date.append('06/23/' + str(auction[3]))
+	elif auction[5] == 'Holidays' :
+		date.append('12/11/' + str(auction[6]))
+	elif auction[1] == 'Dhabi' :
+		date.append('11/30/' + str(auction[2]))
+	elif auction[3] == 'Garaj' :
+		date.append('09/28/' + str(auction[5]))
+	elif auction[1] == 'Saragga' :
+		date.append('09/21/' + str(auction[3]))
+	elif auction[1] == 'Erba' :
+		date.append('05/25/' + str(auction[2]))
+	elif auction[1] == 'Guyton' :
+		date.append('05/04/' + str(auction[3]))
+	elif auction[0] == 'Essen' :
+		date.append('04/11/' + str(auction[1]))
+	elif auction[1] == 'Elkhart' :
+		date.append('10/23/' + str(auction[3]))
+	elif auction[1] == 'Mitosinka' :
+		date.append('09/25/' + str(auction[3]))
+	elif auction[0] == 'Shift/monterey' :
+		date.append('08/14/' + str(auction[1]))
+	elif auction[4] == 'Petitjean' :
+		date.append('06/03/2020')
+
 
 
 	""" Find all text from soup """
@@ -121,8 +152,51 @@ def scrape_rm(soup) :
 	Make, Model = zip(*Car)
 
 	""" Assign country origin of vehicle """
+	pkl_file = open('car_list.pkl', 'rb')
+	car_dict = pickle.load(pkl_file)
+
+	pkl_file = open('master_lst.pkl', 'rb')
+	master_lst = pickle.load(pkl_file)
 
 
+	for item in Make :
+		if item not in master_lst : 
+			country.append('Missing')
+		for k in car_dict['USA'] :
+			if k == item :
+				country.append('USA')
+		for k in car_dict['UK'] :
+			if k == item :
+				country.append('UK')
+		for k in car_dict['Italy'] :
+			if k == item :
+				country.append('Italy')
+		for k in car_dict['Germany'] :
+			if k == item :
+				country.append('Germany')
+		for k in car_dict['France'] :
+			if k == item :
+				country.append('France')
+		for k in car_dict['Japan'] :
+			if k == item :
+				country.append('Japan')
+		for k in car_dict['Sweden'] :
+			if k == item :
+				country.append('Sweden')
+		for k in car_dict['Spain'] :
+			if k == item :
+				country.append('Spain')
+		for k in car_dict['Austria'] :
+			if k == item :
+				country.append('Austria')
+		for k in car_dict['UK_Italy'] :
+			if k == item :
+				country.append('UK_Italy')
+
+	print(country)
+
+	pkl_file.close()
+	pkl_file.close()
 
 	""" Identifies currency, cleans string and converts to integer """
 	indicator = ''
@@ -174,7 +248,7 @@ def scrape_rm(soup) :
 	date = date * len(Year)
 
 	""" Put data in data frame """
-	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Make': Make, 'Model': Model, 'Sold': sold,'Date': date}
+	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Make': Make, 'Model': Model, 'Sold': sold,'Date': date, "Country": country}
 	df = pd.DataFrame.from_dict(data,orient='index')
 	df = df.transpose()
 
@@ -183,7 +257,7 @@ def scrape_rm(soup) :
 
 	df.to_csv(str(np.random.randint(1,1000,size=1)) + '.csv')
 
-make_soup('https://rmsothebys.com/en/home/auction-results/sm21')
+make_soup('https://rmsothebys.com/en/home/auction-results/es20')
 
 
 # data = {'Lot': Price_Lots, 'Sold': sold, 'Make_and_model': Model_and_Make}
