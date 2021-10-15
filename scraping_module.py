@@ -33,6 +33,7 @@ def scrape_rm(soup) :
 	sold_soup = []
 	sold = []
 	date = []
+	country = []
 	country_lst=['USD','EUR','GPB', 'CHF']
 
 	headings = soup.find_all('div', {'class': 'search-result__caption'})
@@ -115,6 +116,14 @@ def scrape_rm(soup) :
 	Lot, Price = zip(*Price_Lots)
 	Year, Car = zip(*Model_and_Make)
 
+	""" Split car make and model """
+	Car = [item.split(' ',1) for item in Car]
+	Make, Model = zip(*Car)
+
+	""" Assign country origin of vehicle """
+
+
+
 	""" Identifies currency, cleans string and converts to integer """
 	indicator = ''
 
@@ -165,7 +174,7 @@ def scrape_rm(soup) :
 	date = date * len(Year)
 
 	""" Put data in data frame """
-	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Cars': Car, 'Sold': sold,'Date': date}
+	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Make': Make, 'Model': Model, 'Sold': sold,'Date': date}
 	df = pd.DataFrame.from_dict(data,orient='index')
 	df = df.transpose()
 
