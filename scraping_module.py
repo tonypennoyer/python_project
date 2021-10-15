@@ -29,8 +29,8 @@ def make_soup(url) :
 
 
 def scrape_rm(soup) :
-	Price_Lots = []
-	Model_and_Make = []
+	Price_and_Lot = []
+	Year_Model_and_Make = []
 	sold_soup = []
 	sold = []
 	date = []
@@ -42,31 +42,42 @@ def scrape_rm(soup) :
 	""" Assign correct date  """
 	auction = soup.title.text
 	auction = auction.split(' ')
-	print(auction)
+	auc_name = []
 	if auction[0] == 'Hilton' :
 		date.append('11/05/' + str(auction[2]))
+		auc_name.append('Hilton Head,SC')
 	elif auction[0] == 'Hershey' :
 		date.append('10/06/' + str(auction[1]))
+		auc_name.append('Hershey,PA')
 	elif auction[1] == 'Moritz' :
 		date.append('09/17/' + str(auction[2]))
+		auc_name.append('St. Moritz,Switzerland')
 	elif auction[0] == 'London' :
 		date.append('09/07/' + str(auction[1]))
+		auc_name.append('London,UK')
 	elif auction[1] == 'Fall' :
 		date.append('09/01/' + str(auction[2]))
 	elif auction[0] == 'Monterey' :
 		date.append('08/20/' + str(auction[1]))
+		auc_name.append('Monterey,CA')
 	elif auction[0] == 'Motor' :
 		date.append('07/30/' + str(auction[2]))
+		auc_name.append('Detroit,MI')
 	elif auction[0] == 'Santa' :
 		date.append('06/25/' + str(auction[2]))
+		auc_name.append('Los Angeles,CA')
 	elif auction[0] == 'Monaco' :
 		date.append('05/14/' + str(auction[1]))
+		auc_name.append('Monaco')
 	elif auction[1] == 'Spring' :
 		date.append('05/05/' + str(auction[2]))
+		auc_name.append('Auburn,IN')
 	elif auction[0] == 'Fort' :
 		date.append('04/03/' + str(auction[2]))
+		auc_name.append('Fort Lauderdale,FL')
 	elif auction[0] == 'Arizona' :
 		date.append('01/29/' + str(auction[1]))
+		auc_name.append('Scottsdale,AZ')
 	elif auction[3] == 'Museum' :
 		date.append('12/08/' + str(auction[5]))
 	elif auction[2] == '70th' :
@@ -77,6 +88,7 @@ def scrape_rm(soup) :
 		date.append('12/11/' + str(auction[6]))
 	elif auction[1] == 'Dhabi' :
 		date.append('11/30/' + str(auction[2]))
+		auc_name.append('Abu Dhabi')
 	elif auction[3] == 'Garaj' :
 		date.append('09/28/' + str(auction[5]))
 	elif auction[1] == 'Saragga' :
@@ -93,17 +105,22 @@ def scrape_rm(soup) :
 		date.append('09/25/' + str(auction[3]))
 	elif auction[0] == 'Shift/monterey' :
 		date.append('08/14/' + str(auction[1]))
+		auc_name.append('Online')
 	elif auction[4] == 'Petitjean' :
 		date.append('06/03/2020')
+	elif auction[0] == 'Paris' :
+		date.append('02/05/' + str(auction[1]))
+		auc_name.append('Paris,France')
+
 
 
 
 	""" Find all text from soup """
 	for item in headings:
-		Price_Lots.append(item.find('span', {'class':'heading-subtitle--bold ng-binding'}).text)
+		Price_and_Lot.append(item.find('span', {'class':'heading-subtitle--bold ng-binding'}).text)
 
 	for item in headings:
-		Model_and_Make.append(item.find('p', {'class':'heading-subtitle--bold ellipsis ng-binding'}).text)
+		Year_Model_and_Make.append(item.find('p', {'class':'heading-subtitle--bold ellipsis ng-binding'}).text)
 
 	for item in headings:
 		sold_soup.append(item.find('p', {'class':'clearfix'}).text)
@@ -119,7 +136,6 @@ def scrape_rm(soup) :
 			curr_el = str(elem)
 			next_el = str(sold_lst[index+1])
 
-			# print(curr_el)
 			if prev_el in country_lst and curr_el == 'Sold' :
 				sold.append('Sold')
 			elif prev_el[0] == 'C' and curr_el == 'Sold' :
@@ -130,26 +146,30 @@ def scrape_rm(soup) :
 				sold.append('Not Sold')
 			else : continue
 
-	""" Cleaning data section """
-	Model_and_Make = [item.split(' ', 1) for item in Model_and_Make]
+	""" separate year, model and make"""
 
-	Price_Lots = [item.replace('\n','') for item in Price_Lots]
-	Price_Lots = [item.replace('Lot','') for item in Price_Lots]
-	Price_Lots = [item.strip() for item in Price_Lots]
-	Price_Lots = [item.replace(' ','') for item in Price_Lots]
-	Price_Lots = [item.replace('USD','') for item in Price_Lots]
-	Price_Lots = [item.replace('EUR','') for item in Price_Lots]
-	Price_Lots = [item.replace('GBP','') for item in Price_Lots]
-	Price_Lots = [item.split('|') for item in Price_Lots]
+	for string in Year_Model_and_Make :
+		if string[0].isdigit() == False :
+			noyear = string
+			Year_Model_and_Make = [item.replace(noyear, '0000 No Year Delete') for item in Year_Model_and_Make]
 
+	Year_Model_and_Make = [item.split(' ', 1) for item in Year_Model_and_Make]
+	Year, Model_and_Make = zip(*Year_Model_and_Make)
+	Model_and_Make = [item.split(' ',1) for item in Model_and_Make]
+	Make, Model = zip(*Model_and_Make)
+
+	""" clean price and lot number"""
+	Price_and_Lot = [item.replace('\n','') for item in Price_and_Lot]
+	Price_and_Lot = [item.replace('Lot','') for item in Price_and_Lot]
+	Price_and_Lot = [item.strip() for item in Price_and_Lot]
+	Price_and_Lot = [item.replace(' ','') for item in Price_and_Lot]
+	Price_and_Lot = [item.replace('USD','') for item in Price_and_Lot]
+	Price_and_Lot = [item.replace('EUR','') for item in Price_and_Lot]
+	Price_and_Lot = [item.replace('GBP','') for item in Price_and_Lot]
+	Price_and_Lot = [item.split('|') for item in Price_and_Lot]
 
 	""" Split up nested lists into separate ones """
-	Lot, Price = zip(*Price_Lots)
-	Year, Car = zip(*Model_and_Make)
-
-	""" Split car make and model """
-	Car = [item.split(' ',1) for item in Car]
-	Make, Model = zip(*Car)
+	Lot, Price = zip(*Price_and_Lot)
 
 	""" Assign country origin of vehicle """
 	pkl_file = open('car_list.pkl', 'rb')
@@ -192,8 +212,9 @@ def scrape_rm(soup) :
 		for k in car_dict['UK_Italy'] :
 			if k == item :
 				country.append('UK_Italy')
-
-	print(country)
+		for k in car_dict['Belgium'] :
+			if k == item :
+				country.append('Belgium')
 
 	pkl_file.close()
 	pkl_file.close()
@@ -244,11 +265,20 @@ def scrape_rm(soup) :
 		Price = [num * 1.08 for num in Price]
 	Price = list(map(round,Price))
 
-	""" Date array match length of others """
+	""" Date and auction array match length of others """
+	for x in date :
+		if x == '' :
+			date = [item.replace('','na') for item in date]
+	for x in auc_name:
+		if x == '' : 
+			auc_name = [item.replace('','na') for item in auc_name]
+
 	date = date * len(Year)
+	auc_name = auc_name * len(Year)
+
 
 	""" Put data in data frame """
-	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Make': Make, 'Model': Model, 'Sold': sold,'Date': date, "Country": country}
+	data = {'Lot': Lot, 'Price_USD': Price, 'Year': Year, 'Make': Make, 'Model': Model, 'Sold': sold,'Date': date, "Country": country, "Location": auc_name}
 	df = pd.DataFrame.from_dict(data,orient='index')
 	df = df.transpose()
 
@@ -257,7 +287,7 @@ def scrape_rm(soup) :
 
 	df.to_csv(str(np.random.randint(1,1000,size=1)) + '.csv')
 
-make_soup('https://rmsothebys.com/en/home/auction-results/es20')
+make_soup('https://rmsothebys.com/en/home/auction-results/az16')
 
 
 # data = {'Lot': Price_Lots, 'Sold': sold, 'Make_and_model': Model_and_Make}
@@ -266,11 +296,11 @@ make_soup('https://rmsothebys.com/en/home/auction-results/es20')
 """ Merges csvs """
 
 # merge = pd.concat(
-# 	map(pd.read_csv,['[543].csv','[577].csv','[719].csv','[825].csv']), ignore_index=True)
+# 	map(pd.read_csv,[]), ignore_index=True)
 
 # merge.to_csv('Arizona16.csv',index=False)
 
-
+#'.csv','.csv','.csv','.csv','.csv','.csv','.csv'
 
 
 
