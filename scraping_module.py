@@ -45,6 +45,8 @@ def scrape_rm(soup) :
 		date.append('11/05/' + str(auction[2]))
 	elif auction[0] == 'Hershey' :
 		date.append('10/06/' + str(auction[1]))
+	elif auction[0] == 'Arizona' :
+		date.append('01/29/' + str(auction[1]))
 	elif auction[0] == 'London' :
 		date.append('09/07/' + str(auction[1]))
 	elif auction[1] == 'Fall' :
@@ -113,35 +115,56 @@ def scrape_rm(soup) :
 	Price_Lots = [item.replace('GBP','') for item in Price_Lots]
 	Price_Lots = [item.split('|') for item in Price_Lots]
 
-	# print(sold_str)
 
 	""" Split up nested lists into separate ones """
 	Lot, Price = zip(*Price_Lots)
 	Year, Car = zip(*Model_and_Make)
 
+	
+	for string in Price :
+		if '$' in string:
+			Price = [item.replace('$','') for item in Price if item in Price] 
+			Price = [item.replace(',','') for item in Price if item in Price]
+			Price = [(re.sub(r".*-.*",r"0",string)) for string in Price]
+		elif 'CHF' in string:
+		elif 'GBP'
+		elif '€'
+		elif '£'
+
+
+
+
+	Price = list(map(int, Price))
+	print(Price)
+
+	# for string in Price :
+	# 	Price = int(string)
 
 	""" Make date list match length with others """
 	date = date * len(Year)
 
 	""" Put data in data frame """
-	data = {'Lot': Lot, 'Price': Price, 'Year': Year, 'Cars': Car, 'Sold': sold,'Date': date}
-	df = pd.DataFrame.from_dict(data,orient='index')
-	df = df.transpose()
+	# data = {'Lot': Lot, 'Price': Price, 'Year': Year, 'Cars': Car, 'Sold': sold,'Date': date}
+	# df = pd.DataFrame.from_dict(data,orient='index')
+	# df = df.transpose()
 
 	# rnum = np.random.randint(1,1000,size=2)
 
-	df.to_csv(str(np.random.randint(1,1000,size=1)) + '.csv')
 
-make_soup('https://rmsothebys.com/en/home/auction-results/mo16#/&page=%7B2%7D?SortBy=Default&SearchTerm=&Category=All%20Categories&IncludeWithdrawnLots=false&Auction=MO16&OfferStatus=All%20Availability&AuctionYear=&Model=Model&Make=Make&FeaturedOnly=false&StillForSaleOnly=false&Collection=All%20Lots&WithoutReserveOnly=false&Day=All%20Days&TimedOnly=false&OneHubLinkOnly=false&InspectionReportOnly=false&AuctionedStatus=All%20Lots&page=3&pageSize=40')
+	# df.to_csv(str(np.random.randint(1,1000,size=1)) + '.csv')
+
+make_soup('https://rmsothebys.com/en/home/auction-results/az16#?SortBy=Default&SearchTerm=&Category=All%20Categories&IncludeWithdrawnLots=false&Auction=AZ16&OfferStatus=All%20Availability&AuctionYear=&Model=Model&Make=Make&FeaturedOnly=false&StillForSaleOnly=false&Collection=All%20Lots&WithoutReserveOnly=false&Day=All%20Days&TimedOnly=false&OneHubLinkOnly=false&InspectionReportOnly=false&AuctionedStatus=All%20Lots&page=4&pageSize=40')
 
 
 # data = {'Lot': Price_Lots, 'Sold': sold, 'Make_and_model': Model_and_Make}
 # df = pd.DataFrame(data=data)
 
-# merge = pd.concat(
-# 	map(pd.read_csv,['Mont_16_page_1.csv','Mont_16_page_2.csv','Mont_16_page_3.csv']), ignore_index=True)
+""" Merges csvs """
 
-# merge.to_csv('Mont16.csv')
+# merge = pd.concat(
+# 	map(pd.read_csv,['[543].csv','[577].csv','[719].csv','[825].csv']), ignore_index=True)
+
+# merge.to_csv('Arizona16.csv',index=False)
 
 
 
