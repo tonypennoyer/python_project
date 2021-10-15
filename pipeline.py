@@ -19,5 +19,6 @@ def clean_data(file, date) :
 
 	return df.to_csv(file)
 
-pdf_to_csv('https://rmsothebys.com/media/331915/rm-sothebys-st-moritz-official-results-chf.pdf','21_rmMoritz.csv')
-clean_data('21_rmMoritz.csv','09/17/2021')
+
+
+

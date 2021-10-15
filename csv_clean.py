@@ -14,4 +14,4 @@ df.drop('Sold', axis=1, inplace = True)
 
 df['Date'] = '01/01/2021'
 
- df.to_csv('new_pebble.csv')
+df.to_csv('new_pebble.csv')
