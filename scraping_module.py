@@ -30,8 +30,35 @@ def scrape_rm(soup) :
 	Model_and_Make = []
 	sold_soup = []
 	sold = []
+	date = []
 
 	headings = soup.find_all('div', {'class': 'search-result__caption'})
+
+	""" This section is to assign the correct date to our date list.
+	this is based on the auctions date and name """
+	auction = soup.title.text
+	auction = auction.split(' ')
+	if auction[0] == 'Hilton' :
+		date.append('11/05/' + str(auction[2]))
+	elif auction[0] == 'Hershey' :
+		date.append('10/06/' + str(auction[1]))
+	elif auction[0] == 'London' :
+		date.append('09/07/' + str(auction[1]))
+	elif auction[1] == 'Fall' :
+		date.append('09/01/' + str(auction[2]))
+	elif auction[0] == 'Monterey' :
+		date.append('08/20/' + str(auction[1]))
+	elif auction[0] == 'Motor' :
+		date.append('07/30/' + str(auction[2]))
+	elif auction[0] == 'Santa' :
+		date.append('06/25/' + str(auction[2]))
+	elif auction[0] == 'Monaco' :
+		date.append('05/14/' + str(auction[1]))
+	elif auction[1] == 'Spring' :
+		date.append('05/05/' + str(auction[2]))
+	elif auction[0] == 'Fort' :
+		date.append('04/03/' + str(auction[2]))
+
 
 	for item in headings:
 		Price_Lots.append(item.find('span', {'class':'heading-subtitle--bold ng-binding'}).text)
@@ -56,11 +83,16 @@ def scrape_rm(soup) :
 
 				if (prev_el == 'USD' or 'EUR' or 'GPB') and curr_el == 'Not' and next_el == 'Sold':
 					sold.append(curr_el + ' ' + next_el)
-				elif (prev_el == 'USD' or 'EUR' or 'GPB') and curr_el == 'Sold' :
+				if (prev_el == 'USD' or 'EUR' or 'GPB') and curr_el == 'Sold' and next_el == 'Current:':
 					sold.append(curr_el)
+				if curr_el == 'Bid:' and next_el == 'Sold' :
+					continue
 				else : continue
 
-	print(sold)
+
+	""" Cleaning data section """
+	Model_and_Make = [item.split(' ', 1) for item in Model_and_Make]
+
 	Price_Lots = [item.replace('\n','') for item in Price_Lots]
 	Price_Lots = [item.replace('Lot','') for item in Price_Lots]
 	Price_Lots = [item.strip() for item in Price_Lots]
@@ -69,10 +101,23 @@ def scrape_rm(soup) :
 	Price_Lots = [item.replace('EUR','') for item in Price_Lots]
 	Price_Lots = [item.replace('GBP','') for item in Price_Lots]
 	Price_Lots = [item.split('|') for item in Price_Lots]
-	print(Price_Lots)
 
-# make_soup('https://rmsothebys.com/en/home/auction-results/mo16')
-make_soup('https://rmsothebys.com/en/home/auction-results/lf16')
+	""" Split up nested lists into separate ones """
+	Lot, Price = zip(*Price_Lots)
+	Year, Car = zip(*Model_and_Make)
+
+
+	# """ Make date list match length with others """
+	for i in range(len(Year)-1) :
+		date += date
+
+	""" Put data in data frame """
+	data = {'Lot': Lot, 'Price': Price, 'Year': Year, 'Car': Car, 'Sold': sold, 'Date': date}
+	df = pd.DataFrame.from_dict(data,orient='index')
+	df = df.transpose()
+	print(df.head(2))
+
+make_soup('https://rmsothebys.com/en/home/auction-results/hf16')
 
 
 # data = {'Lot': Price_Lots, 'Sold': sold, 'Make_and_model': Model_and_Make}
