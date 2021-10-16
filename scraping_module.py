@@ -6,6 +6,8 @@ import requests
 import pandas as pd
 import numpy as np
 import pickle
+import os, glob
+import time
 from itertools import chain
 from csv import writer
 from bs4 import BeautifulSoup
@@ -23,7 +25,6 @@ def make_soup(url) :
 	driver.get(url)
 
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
-	print('done1')
 	scrape_rm(soup)
 
 
@@ -35,7 +36,8 @@ def scrape_rm(soup) :
 	sold = []
 	date = []
 	country = []
-	country_lst=['USD','EUR','GPB', 'CHF']
+	country_lst=['USD','EUR','GBP', 'CHF']
+	no_error = 'no price'
 
 	headings = soup.find_all('div', {'class': 'search-result__caption'})
 
@@ -46,17 +48,21 @@ def scrape_rm(soup) :
 	if auction[0] == 'Hilton' :
 		date.append('11/05/' + str(auction[2]))
 		auc_name.append('Hilton Head,SC')
+	elif auction[0] == 'Amelia' :
+		date.append('03/12/' + str(auction[2]))
+		auc_name.append('Amelia Island,FL')
+	elif auction[0] == 'Paris' :
+		date.append('02/05/' + str(auction[1]))
+		auc_name.append('Paris,France')
 	elif auction[0] == 'Hershey' :
 		date.append('10/06/' + str(auction[1]))
 		auc_name.append('Hershey,PA')
-	elif auction[1] == 'Moritz' :
-		date.append('09/17/' + str(auction[2]))
-		auc_name.append('St. Moritz,Switzerland')
 	elif auction[0] == 'London' :
 		date.append('09/07/' + str(auction[1]))
 		auc_name.append('London,UK')
-	elif auction[1] == 'Fall' :
-		date.append('09/01/' + str(auction[2]))
+	elif auction[0] == 'Shift/monterey' :
+		date.append('08/14/' + str(auction[1]))
+		auc_name.append('Online')
 	elif auction[0] == 'Monterey' :
 		date.append('08/20/' + str(auction[1]))
 		auc_name.append('Monterey,CA')
@@ -69,48 +75,75 @@ def scrape_rm(soup) :
 	elif auction[0] == 'Monaco' :
 		date.append('05/14/' + str(auction[1]))
 		auc_name.append('Monaco')
-	elif auction[1] == 'Spring' :
-		date.append('05/05/' + str(auction[2]))
-		auc_name.append('Auburn,IN')
 	elif auction[0] == 'Fort' :
 		date.append('04/03/' + str(auction[2]))
 		auc_name.append('Fort Lauderdale,FL')
 	elif auction[0] == 'Arizona' :
 		date.append('01/29/' + str(auction[1]))
 		auc_name.append('Scottsdale,AZ')
-	elif auction[3] == 'Museum' :
-		date.append('12/08/' + str(auction[5]))
+	elif auction[1] == 'Fall' :
+		date.append('09/01/' + str(auction[2]))
+		auc_name.append('Auburn,IN')
+	elif auction[1] == 'Erba':
+		date.append('05/27/' + str(auction[2]))
+		auc_name.append('Cernobbio,Italy')
+	elif auction[0] == 'Single-Lot':
+		date.append('01/01/' + str(auction[5]))
+		auc_name.append('Los Angeles,CA')
+	elif auction[1] == 'Spring' :
+		date.append('05/05/' + str(auction[2]))
+		auc_name.append('Auburn,IN')
+	elif auction[3] == 'Garaj':
+		date.append('09/28/' + str(auction[5]))
+		auc_name.append('Dayton,OH')
+	elif auction[0] == 'Duemila':
+		date.append('11/25/' + str(auction[2]))
+		auc_name.append('Milan,Italy')
+	elif auction[3] == 'Icons':
+		date.append('12/06/' + str(auction[4]))
+		auc_name.append('New York,NY')
 	elif auction[2] == '70th' :
 		date.append('10/27/' + str(auction[5]))
 	elif auction[1] == 'Dingman' :
 		date.append('06/23/' + str(auction[3]))
-	elif auction[5] == 'Holidays' :
-		date.append('12/11/' + str(auction[6]))
 	elif auction[1] == 'Dhabi' :
 		date.append('11/30/' + str(auction[2]))
 		auc_name.append('Abu Dhabi')
-	elif auction[3] == 'Garaj' :
-		date.append('09/28/' + str(auction[5]))
+	elif auction[1] == 'Moritz' :
+		date.append('09/17/' + str(auction[2]))
+		auc_name.append('St. Moritz,Switzerland')
 	elif auction[1] == 'Saragga' :
 		date.append('09/21/' + str(auction[3]))
+		auc_name.append('Monteira,Portugal')
 	elif auction[1] == 'Erba' :
 		date.append('05/25/' + str(auction[2]))
 	elif auction[1] == 'Guyton' :
 		date.append('05/04/' + str(auction[3]))
+		auc_name.append('St.Louis,MO')
 	elif auction[0] == 'Essen' :
 		date.append('04/11/' + str(auction[1]))
+		auc_name.append('Essen,Germany')
 	elif auction[1] == 'Elkhart' :
 		date.append('10/23/' + str(auction[3]))
 	elif auction[1] == 'Mitosinka' :
 		date.append('09/25/' + str(auction[3]))
-	elif auction[0] == 'Shift/monterey' :
-		date.append('08/14/' + str(auction[1]))
-		auc_name.append('Online')
+	elif auction[3] == 'Museum' :
+		date.append('12/08/' + str(auction[5]))
+	elif auction[4] == 'Passione':
+		date.append('09/09/' + str(auction[5]))
+		auc_name.append('Maranello,Italy')
 	elif auction[4] == 'Petitjean' :
 		date.append('06/03/2020')
-	elif auction[0] == 'Paris' :
-		date.append('02/05/' + str(auction[1]))
-		auc_name.append('Paris,France')
+	elif auction[1] == 'Petersen':
+		date.append('12/08/' + str(auction[5]))
+		auc_name.append('Los Angeles,CA')
+	elif auction[3] == 'Garaj' :
+		date.append('09/28/' + str(auction[5]))
+	elif auction[5] == 'Holidays':
+		date.append('12/11/' + str(auction[6]))
+		auc_name.append('Los Angeles,CA')
+	elif auction[5] == 'Holidays' :
+		date.append('12/11/' + str(auction[6]))
 
 
 
@@ -154,9 +187,17 @@ def scrape_rm(soup) :
 			Year_Model_and_Make = [item.replace(noyear, '0000 No Year Delete') for item in Year_Model_and_Make]
 
 	Year_Model_and_Make = [item.split(' ', 1) for item in Year_Model_and_Make]
-	Year, Model_and_Make = zip(*Year_Model_and_Make)
+
+
+
+	# Year, Model_and_Make = map(list,zip(*Year_Model_and_Make))
+	Year = [i[0] for i in Year_Model_and_Make]
+	Model_and_Make = [i[1] for i in Year_Model_and_Make]
+
+
 	Model_and_Make = [item.split(' ',1) for item in Model_and_Make]
-	Make, Model = zip(*Model_and_Make)
+	Make = [i[0] for i in Model_and_Make]
+	Model = [i[1] for i in Model_and_Make]
 
 	""" clean price and lot number"""
 	Price_and_Lot = [item.replace('\n','') for item in Price_and_Lot]
@@ -168,8 +209,14 @@ def scrape_rm(soup) :
 	Price_and_Lot = [item.replace('GBP','') for item in Price_and_Lot]
 	Price_and_Lot = [item.split('|') for item in Price_and_Lot]
 
-	""" Split up nested lists into separate ones """
-	Lot, Price = zip(*Price_and_Lot)
+	""" Split up nested lists into separate ones 
+	 if list has no price add 0000 """
+	for string in Price_and_Lot :
+		if len(string) == 1 :
+			string.append('0000')
+
+	Lot = [i[0] for i in Price_and_Lot]
+	Price = [i[1] for i in Price_and_Lot]
 
 	""" Assign country origin of vehicle """
 	pkl_file = open('car_list.pkl', 'rb')
@@ -215,6 +262,10 @@ def scrape_rm(soup) :
 		for k in car_dict['Belgium'] :
 			if k == item :
 				country.append('Belgium')
+		for k in car_dict['UK_USA'] :
+			if k == item :
+				country.append('UK_USA')
+
 
 	pkl_file.close()
 	pkl_file.close()
@@ -255,7 +306,8 @@ def scrape_rm(soup) :
 
 
 	""" converts currency to USD (conversion rate taken Oct 15 via google) """
-	Price = list(map(int, Price))
+	Price = [item.replace('SoldAfterAuction','0') for item in Price]
+	Price = list(map(float, Price))
 	Price = list(map(float, Price))
 	if indicator == 'euro' :
 		Price = [num * 1.16 for num in Price]
@@ -283,24 +335,37 @@ def scrape_rm(soup) :
 	df = df.transpose()
 
 	""" Assign random variable to save .csv """
-	rnum = np.random.randint(1,1000,size=2)
+	rnum = np.random.randint(1,5000,size=1)
 
 	df.to_csv(str(np.random.randint(1,1000,size=1)) + '.csv')
 
-make_soup('https://rmsothebys.com/en/home/auction-results/az16')
+
+def merge(output) : 
+	path = r'/Users/tonypennoyer/desktop/scraping' # use your path
+	all_files = glob.glob(path + "/*.csv")
+
+	li = []
+
+	for filename in all_files:
+	    df = pd.read_csv(filename, index_col=None, header=0)
+	    li.append(df)
+
+	frame = pd.concat(li, axis=0, ignore_index=True)
+
+	frame.to_csv(output, index=False) 
+
+# page = 5
+
+# while page != 21 :
+# 	url = f'https://rmsothebys.com/en/home/auction-results/as17#?SortBy=Default&SearchTerm=&Category=All%20Categories&IncludeWithdrawnLots=false&Auction=AS17&OfferStatus=All%20Availability&AuctionYear=&Model=Model&Make=Make&FeaturedOnly=false&StillForSaleOnly=false&Collection=All%20Lots&WithoutReserveOnly=false&Day=All%20Days&TimedOnly=false&OneHubLinkOnly=false&InspectionReportOnly=false&AuctionedStatus=All%20Lots&page={page}&pageSize=40'
+# 	# time.sleep()
+# 	make_soup(url)
+# 	page = page + 1
+# 	print(page)
+
+# merge('AuburnSpring17.csv')
 
 
-# data = {'Lot': Price_Lots, 'Sold': sold, 'Make_and_model': Model_and_Make}
-# df = pd.DataFrame(data=data)
-
-""" Merges csvs """
-
-# merge = pd.concat(
-# 	map(pd.read_csv,[]), ignore_index=True)
-
-# merge.to_csv('Arizona16.csv',index=False)
-
-#'.csv','.csv','.csv','.csv','.csv','.csv','.csv'
 
 
 
@@ -309,5 +374,8 @@ make_soup('https://rmsothebys.com/en/home/auction-results/az16')
 
 
 
-
-
+#London 16
+# make_soup('https://rmsothebys.com/en/home/auction-results/lf16')
+# make_soup('https://rmsothebys.com/en/home/auction-results/lf16#?SortBy=Default&SearchTerm=&Category=All%20Categories&IncludeWithdrawnLots=false&Auction=LF16&OfferStatus=All%20Availability&AuctionYear=&Model=Model&Make=Make&FeaturedOnly=false&StillForSaleOnly=false&Collection=All%20Lots&WithoutReserveOnly=false&Day=All%20Days&TimedOnly=false&OneHubLinkOnly=false&InspectionReportOnly=false&AuctionedStatus=All%20Lots&page=2&pageSize=40')
+# make_soup('https://rmsothebys.com/en/home/auction-results/lf16#?SortBy=Default&SearchTerm=&Category=All%20Categories&IncludeWithdrawnLots=false&Auction=LF16&OfferStatus=All%20Availability&AuctionYear=&Model=Model&Make=Make&FeaturedOnly=false&StillForSaleOnly=false&Collection=All%20Lots&WithoutReserveOnly=false&Day=All%20Days&TimedOnly=false&OneHubLinkOnly=false&InspectionReportOnly=false&AuctionedStatus=All%20Lots&page=3&pageSize=40')
+# merge('london16.csv')
