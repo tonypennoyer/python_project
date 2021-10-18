@@ -13,7 +13,17 @@ from scipy.stats import norm
 
 df = pd.read_csv('RM_MASTER_LIST.csv', index_col=0, parse_dates=True)
 
+mini = df[((df['Model'].str.contains('Mini')) | (df['Make'].str.contains('Mini'))) & (df['Make'].str.contains('Alfa') ==False) & 
+	(df['Make'].str.contains('Honda') ==False) & (df['Make'].str.contains('Marcos') ==False) & (df['Make'].str.contains('ACOMA') ==False) & 
+	(df['Make'].str.contains('Moretti') ==False) & (df['Make'].str.contains('Mickey') ==False) & (df['Make'].str.contains('Fiat') ==False)]
+
+MG = df[((df['Model'].str.contains('MG')) | (df['Make'].str.contains('MG'))) & (df['Model'].str.contains('TD') ==True) & (df['Make'].str.contains('Mercedes-Benz') ==False) & 
+	(df['Make'].str.contains('Tojeiro-MG') ==False) & (df['Make'].str.contains('Mercedes-AMG') ==False)]
 p911 = df[df['Model'].str.contains('911') == True]
+p911_sold = p911[p911['Sold'] == 'Sold']
+p911_not_sold = p911[p911['Sold'] != 'Sold']
+mini_sold = mini[mini['Sold'] == 'Sold']
+MG_sold = MG[MG['Sold'] == 'Sold']
 
 
 
@@ -73,47 +83,6 @@ p911 = df[df['Model'].str.contains('911') == True]
 """ END """
 
 
-
-
-
-
-
-# p70_75 = p911.loc[(p911['Year'] == 1970) | 
-#                          (p911['Year'] == 1964) |
-#                          (p911['Year'] == 1971) |
-#                          (p911['Year'] == 1972) |
-#                          (p911['Year'] == 1973) |
-#                          (p911['Year'] == 1974) |
-# 						 (p911['Year'] == 1975)]
-						 
-
-# # p76_80 = p911.loc[(p911['Year'] == 1970) | 
-# #                          (p911['Year'] == 1976) |
-# #                          (p911['Year'] == 1977) |
-# #                          (p911['Year'] == 1978) |
-# #                          (p911['Year'] == 1979) |
-# #                          (p911['Year'] == 1980) ]
-
-# # p81_ = p911.loc[(p911['Year'] == 1970) | 
-# #                          (p911['Year'] == 1981) |
-# #                          (p911['Year'] == 1982) |
-# #                          (p911['Year'] == 1983) |
-# #                          (p911['Year'] == 1984) |
-# #                          (p911['Year'] == 1985)]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 """ BAR PLOT 911 AVERAGE BY YEAR PRODUCED """
 p91_yr_avg = p911.groupby('Year', as_index=False)['Price_USD'].mean()
 p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
@@ -131,16 +100,9 @@ p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
 # plt.show()
 """ END """
 
-
-
-
-
-
 """ Porsche 911 BOX PLOT """
 # p911.boxplot(by='Year', column=['Price_USD'], grid = False)
 # print(p911[p911['Price_USD'] > 750000])
-p911_sold = p911[p911['Sold'] == 'Sold']
-p911_not_sold = p911[p911['Sold'] != 'Sold']
 # p911_sold.boxplot(column=['Price_USD'], return_type='axes');
 # plt.ylabel('Price')
 # plt.title('Porsche 911 Sales')
@@ -152,40 +114,14 @@ p911_not_sold = p911[p911['Sold'] != 'Sold']
 """ END """
 
 """ MINI BOX PLOT """
-mini = df[((df['Model'].str.contains('Mini')) | (df['Make'].str.contains('Mini'))) & (df['Make'].str.contains('Alfa') ==False) & 
-	(df['Make'].str.contains('Honda') ==False) & (df['Make'].str.contains('Marcos') ==False) & (df['Make'].str.contains('ACOMA') ==False) & 
-	(df['Make'].str.contains('Moretti') ==False) & (df['Make'].str.contains('Mickey') ==False) & (df['Make'].str.contains('Fiat') ==False)]
-
-MG = df[((df['Model'].str.contains('MG')) | (df['Make'].str.contains('MG'))) & (df['Model'].str.contains('TD') ==True) & (df['Make'].str.contains('Mercedes-Benz') ==False) & 
-	(df['Make'].str.contains('Tojeiro-MG') ==False) & (df['Make'].str.contains('Mercedes-AMG') ==False)]
-
-mini_sold = mini[mini['Sold'] == 'Sold']
-MG_sold = MG[MG['Sold'] == 'Sold']
-
 # mini_sold.boxplot(column=['Price_USD'], return_type='axes');
-MG_sold.boxplot(column=['Price_USD'], return_type='axes');
-plt.yticks([0,10000,20000,30000,40000], ['$0','$10K','$20K','$30K','$40K'])
-plt.ylabel('Price')
-plt.title('MG TD Sales')
-plt.xticks([1], [''])
-plt.show()
-
-# MG_sold.to_csv('mgtest.csv')
-# p911.boxplot(by='Year', column=['Price_USD'], grid = False)
-# print(p911[p911['Price_USD'] > 750000])
-p911_sold = p911[p911['Sold'] == 'Sold']
-p911_not_sold = p911[p911['Sold'] != 'Sold']
-# p911_sold.boxplot(column=['Price_USD'], return_type='axes');
+# MG_sold.boxplot(column=['Price_USD'], return_type='axes');
+# plt.yticks([0,10000,20000,30000,40000], ['$0','$10K','$20K','$30K','$40K'])
 # plt.ylabel('Price')
-# plt.title('Porsche 911 Sales')
-# plt.legend()
-# plt.ylim(0,2750000)
+# plt.title('MG TD Sales')
 # plt.xticks([1], [''])
-# plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M'])
 # plt.show()
 """ END """
-
-
 
 """ Porsche 911 Strip Plot """
 # sns.set_theme(style="whitegrid")
@@ -214,46 +150,75 @@ p911_not_sold = p911[p911['Sold'] != 'Sold']
 # plt.ylim(3500000)
 # plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000,3000000,3250000,3500000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M','$3M','$3.25M','$3.5M'])
 # plt.show()
+""" END """
+
+""" ALL CARS SCATTER """
+# american = df[df['Country'] == 'USA']
+# us_16 = american[american['Date'].str.contains('2016')]
+# us_16_avg = us_16["Price_USD"].mean()
+# us_17 = american[american['Date'].str.contains('2017')]
+# us_17_avg = us_17["Price_USD"].mean()
+# us_18 = american[american['Date'].str.contains('2018')]
+# us_18_avg = us_18["Price_USD"].mean()
+# us_19 = american[american['Date'].str.contains('2019')]
+# us_19_avg = us_19["Price_USD"].mean()
+# us_20 = american[american['Date'].str.contains('2020')]
+# us_20_avg = us_20["Price_USD"].mean()
+# us_21 = american[american['Date'].str.contains('2021')]
+# us_21_avg = us_21["Price_USD"].mean()
+
+# ital_16 = ital[ital['Date'].str.contains('2016') == True]
+# ital_16_avg_price = ital_16["Price_USD"].mean()
+
+# ital_17 = ital[ital['Date'].str.contains('2017') == True]
+# ital_17_avg_price = ital_17["Price_USD"].mean()
+
+# ital_18 = ital[ital['Date'].str.contains('2018') == True]
+# ital_18_avg_price = ital_18["Price_USD"].mean()
+
+# ital_19 = ital[ital['Date'].str.contains('2019') == True]
+# ital_19_avg_price = ital_19["Price_USD"].mean()
+
+# ital_20 = ital[ital['Date'].str.contains('2020') == True]
+# ital_20_avg_price = ital_20["Price_USD"].mean()
+
+# ital_21 = ital[ital['Date'].str.contains('2021') == True]
+# ital_21_avg_price = ital_21["Price_USD"].mean()
 
 
-""" TEST """
-# my_dates = p911['Date'].unique()
+# avg_cars_price = pd.DataFrame({
+# 	'USA' : [us_16_avg,us_17_avg,us_18_avg,us_19_avg,us_20_avg,us_21_avg],
+# 	# 'Monterey, CA' : [p911_16_avg_price,p911_17_avg_price,p911_18_avg_price,p911_19_avg_price,p911_20_avg_price,p911_21_avg_price],
+# 	# 'Amelia Island, FL' : [ital_16_avg_price,ital_17_avg_price,ital_18_avg_price,ital_19_avg_price,ital_20_avg_price,ital_21_avg_price]
+# 	}, index=[2016,2017,2018,2019,2020,2021])
 
-# dates_lst = ['2021-09-17', '2021-09-02', '2021-08-20', '2021-06-25', '2021-05-19',
-#  '2021-03-20', '2021-03-12' ,'2021-02-20', '2021-02-05', '2021-01-29',
-#  '2020-11-20', '2020-10-29' ,'2020-10-06', '2020-09-01', '2020-08-20',
-#  '2020-07-30', '2020-07-14', '2020-06-03', '2020-03-28', '2020-03-12',
-#  '2020-02-05' ,'2020-01-29' ,'2019-11-30', '2019-09-28', '2019-09-21',
-#  '2019-09-07' ,'2019-09-01', '2019-08-20', '2019-05-27', '2019-05-05',
-#  '2019-04-11' ,'2019-04-03', '2019-03-12', '2019-02-05', '2019-01-29',
-#  '2018-12-08' ,'2018-10-27', '2018-09-07', '2018-09-01', '2018-08-20',
-#  '2018-06-23' ,'2018-05-14', '2018-05-05', '2018-04-03', '2018-03-12',
-#  '2018-02-05' ,'2018-01-29', '2017-12-06', '2017-09-07', '2017-09-01',
-#  '2017-08-20' ,'2017-06-25', '2017-05-27','2017-05-05' ,'2017-04-03',
-#  '2017-03-12' ,'2017-02-05', '2017-01-29', '2016-11-25' ,'2016-11-05',
-#  '2016-09-07' ,'2016-09-01', '2016-08-20', '2016-07-30', '2016-06-25',
-#  '2016-05-14' ,'2016-05-05', '2016-04-03', '2016-03-12', '2016-02-05',
-#  '2016-01-29']
-# x = [datetime.strptime(d, '%Y-%m-%d') for d in dates_lst]
 
-# xs = matplotlib.dates.date2num(x)
-
-# hfmt = matplotlib.dates.DateFormatter('%Y-%m-%d')
-
-# fig = plt.figure()
-# ax = fig.add_subplot(1,1,1)
-# ax.xaxis.set_major_formatter(xs)
-# plt.setp(ax.get_xticklabels(), rotation=15)
-# ax.plot(xs, y_float)
+# plt.plot(avg_cars_price)
 # plt.show()
 
 
 
 
+# usa_sold['Date']= pd.to_datetime(p911_sold['Date'])
+# p911_not_sold['Date']= pd.to_datetime(p911_not_sold['Date'])
+# sns.set_style('darkgrid')
+# hey = sns.scatterplot(x='Date',y='Price_USD',data=p911_sold,s=50,alpha=1,color="black")
+# hi= sns.scatterplot(x='Date', y='Price_USD',data=p911_not_sold, s=50, alpha=0.5,color='grey')
+# plt.title('Porsche 911 Sales: 2016 - 2021', y=1.02, fontsize=14)
+# plt.ylabel('Price')
+# plt.xlabel('Year Sold')
+# plt.legend(labels=["Sold","Not Sold"])
 
-
-
-
+# print(p911_sold.info())
+# # start, end = ax.get_xlim()
+# # plt.xlim('2021-01-01')
+# # plt.xticks([2016,2017,2018,2019,2020,2021],['2016','2017','2018','2019','2020','2021'])
+# # plt.xticks(np.arange(min(p911_sold['Year'], max(p911_sold['Year']))))
+# hey.get_figure().autofmt_xdate()
+# hi.get_figure().autofmt_xdate()
+# plt.ylim(3500000)
+# plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000,3000000,3250000,3500000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M','$3M','$3.25M','$3.5M'])
+# plt.show()
 
 
 """ stats for 911 sold """
@@ -451,35 +416,6 @@ dusenberg = df[df['Make'].str.contains('Ferrari') == True]
 
 
 # p911_16 = p911[p911['Year'].str.contains()]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
