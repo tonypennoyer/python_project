@@ -151,6 +151,42 @@ p911_not_sold = p911[p911['Sold'] != 'Sold']
 # plt.show()
 """ END """
 
+""" MINI BOX PLOT """
+mini = df[((df['Model'].str.contains('Mini')) | (df['Make'].str.contains('Mini'))) & (df['Make'].str.contains('Alfa') ==False) & 
+	(df['Make'].str.contains('Honda') ==False) & (df['Make'].str.contains('Marcos') ==False) & (df['Make'].str.contains('ACOMA') ==False) & 
+	(df['Make'].str.contains('Moretti') ==False) & (df['Make'].str.contains('Mickey') ==False) & (df['Make'].str.contains('Fiat') ==False)]
+
+MG = df[((df['Model'].str.contains('MG')) | (df['Make'].str.contains('MG'))) & (df['Model'].str.contains('TD') ==True) & (df['Make'].str.contains('Mercedes-Benz') ==False) & 
+	(df['Make'].str.contains('Tojeiro-MG') ==False) & (df['Make'].str.contains('Mercedes-AMG') ==False)]
+
+mini_sold = mini[mini['Sold'] == 'Sold']
+MG_sold = MG[MG['Sold'] == 'Sold']
+
+# mini_sold.boxplot(column=['Price_USD'], return_type='axes');
+MG_sold.boxplot(column=['Price_USD'], return_type='axes');
+plt.yticks([0,10000,20000,30000,40000], ['$0','$10K','$20K','$30K','$40K'])
+plt.ylabel('Price')
+plt.title('MG TD Sales')
+plt.xticks([1], [''])
+plt.show()
+
+# MG_sold.to_csv('mgtest.csv')
+# p911.boxplot(by='Year', column=['Price_USD'], grid = False)
+# print(p911[p911['Price_USD'] > 750000])
+p911_sold = p911[p911['Sold'] == 'Sold']
+p911_not_sold = p911[p911['Sold'] != 'Sold']
+# p911_sold.boxplot(column=['Price_USD'], return_type='axes');
+# plt.ylabel('Price')
+# plt.title('Porsche 911 Sales')
+# plt.legend()
+# plt.ylim(0,2750000)
+# plt.xticks([1], [''])
+# plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M'])
+# plt.show()
+""" END """
+
+
+
 """ Porsche 911 Strip Plot """
 # sns.set_theme(style="whitegrid")
 # ax = sns.stripplot(x='Sold',y="Price_USD",data=p911_sold)
@@ -158,26 +194,26 @@ p911_not_sold = p911[p911['Sold'] != 'Sold']
 """ END """
 
 """ Porsche 911 Scatter """
-p911_sold['Date']= pd.to_datetime(p911_sold['Date'])
-p911_not_sold['Date']= pd.to_datetime(p911_not_sold['Date'])
-sns.set_style('darkgrid')
-hey = sns.scatterplot(x='Date',y='Price_USD',data=p911_sold,s=50,alpha=1,color="black")
-hi= sns.scatterplot(x='Date', y='Price_USD',data=p911_not_sold, s=50, alpha=0.5,color='grey')
-plt.title('Porsche 911 Sales: 2016 - 2021', y=1.02, fontsize=14)
-plt.ylabel('Price')
-plt.xlabel('Year Sold')
-plt.legend(labels=["Sold","Not Sold"],alpha=1)
+# p911_sold['Date']= pd.to_datetime(p911_sold['Date'])
+# p911_not_sold['Date']= pd.to_datetime(p911_not_sold['Date'])
+# sns.set_style('darkgrid')
+# hey = sns.scatterplot(x='Date',y='Price_USD',data=p911_sold,s=50,alpha=1,color="black")
+# hi= sns.scatterplot(x='Date', y='Price_USD',data=p911_not_sold, s=50, alpha=0.5,color='grey')
+# plt.title('Porsche 911 Sales: 2016 - 2021', y=1.02, fontsize=14)
+# plt.ylabel('Price')
+# plt.xlabel('Year Sold')
+# plt.legend(labels=["Sold","Not Sold"])
 
-# print(p911_sold.info())
-# # start, end = ax.get_xlim()
-# # plt.xlim('2021-01-01')
-# # plt.xticks([2016,2017,2018,2019,2020,2021],['2016','2017','2018','2019','2020','2021'])
-# # plt.xticks(np.arange(min(p911_sold['Year'], max(p911_sold['Year']))))
-hey.get_figure().autofmt_xdate()
-hi.get_figure().autofmt_xdate()
-plt.ylim(3500000)
-plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000,3000000,3250000,3500000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M','$3M','$3.25M','$3.5M'])
-plt.show()
+# # print(p911_sold.info())
+# # # start, end = ax.get_xlim()
+# # # plt.xlim('2021-01-01')
+# # # plt.xticks([2016,2017,2018,2019,2020,2021],['2016','2017','2018','2019','2020','2021'])
+# # # plt.xticks(np.arange(min(p911_sold['Year'], max(p911_sold['Year']))))
+# hey.get_figure().autofmt_xdate()
+# hi.get_figure().autofmt_xdate()
+# plt.ylim(3500000)
+# plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000,3000000,3250000,3500000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M','$3M','$3.25M','$3.5M'])
+# plt.show()
 
 
 """ TEST """
