@@ -20,10 +20,21 @@ mini = df[((df['Model'].str.contains('Mini')) | (df['Make'].str.contains('Mini')
 MG = df[((df['Model'].str.contains('MG')) | (df['Make'].str.contains('MG'))) & (df['Model'].str.contains('TD') ==True) & (df['Make'].str.contains('Mercedes-Benz') ==False) & 
 	(df['Make'].str.contains('Tojeiro-MG') ==False) & (df['Make'].str.contains('Mercedes-AMG') ==False)]
 p911 = df[df['Model'].str.contains('911') == True]
+print(len(p911))
 p911_sold = p911[p911['Sold'] == 'Sold']
 p911_not_sold = p911[p911['Sold'] != 'Sold']
+print(len(p911_not_sold))
 mini_sold = mini[mini['Sold'] == 'Sold']
 MG_sold = MG[MG['Sold'] == 'Sold']
+
+
+small_cars = df[((df['Make'].str.contains('Ferves')) & (df['Model'].str.contains('Ranger'))) | ((df['Make'].str.contains('Fiat') & ((df['Model'].str.contains('500') | (df['Model'].str.contains('600'))))) | 
+	(df['Make'].str.contains('Peel')) | (df['Model'].str.contains('Isetta')) | (df['Model'].str.contains('Kabinenroller')) | (df['Make'].str.contains('Goggomobil')) | 
+	(df['Model'].str.contains('Bianchina')) | ((df['Make'].str.contains('Heinkel')) & (df['Model'].str.contains('Kabine'))))]
+# print(small_cars)
+
+# small_cars.to_csv('small_cars_check.csv')
+
 
 
 
@@ -48,6 +59,41 @@ MG_sold = MG[MG['Sold'] == 'Sold']
 # plt.plot(g_avg.Year, g_avg.Price_USD)
 # plt.show()
 """ END """
+
+""" 911 95' boxplot """
+p911_sold = p911[p911['Sold'] == 'Sold']
+# p911_95 = p911_sold[p911_sold['Year'] == 1995]
+p911_73 = p911_sold[p911_sold['Year'] == 1973]
+# p911_73.boxplot(column=['Price_USD'], return_type='axes');
+# plt.ylabel('Price')
+# plt.title('1973 Porsche 911')
+# # plt.xlabel('Year Produced')
+# plt.ylim(1,160000)
+# plt.xticks([1], [''])
+# plt.yticks([0,200000,400000,600000,800000,1000000,1200000,1400000,1600000], ['$0','$200K','$400K','$600K','$800K','$1M','$1,2M','$1.4M','$1.6M'])
+# plt.show()
+
+
+
+# p911_73_tour = p911_sold[(p911_sold['Year'] == 1973) & (p911_sold['Model'].str.contains('Touring'))]
+# p911_73_tour.boxplot(column=['Price_USD'], return_type='axes');
+# plt.ylabel('Price')
+# plt.title('1973 Porsche 911 Carrera RS 2.7 Touring')
+# # plt.xlabel('Year Produced')
+# plt.ylim(1,160000)
+# plt.xticks([1], [''])
+# plt.yticks([0,200000,400000,600000,800000,1000000,1200000,1400000,1600000], ['$0','$200K','$400K','$600K','$800K','$1M','$1,2M','$1.4M','$1.6M'])
+# plt.show()
+
+
+
+
+# print(p911_73_tour['Price_USD'].describe())
+# # p911_sold.sort_values(by=['Year'])
+# p911_73.to_csv('yearcheck.csv')
+
+
+
 
 
 """ All Average by year """
@@ -84,8 +130,8 @@ MG_sold = MG[MG['Sold'] == 'Sold']
 
 
 """ BAR PLOT 911 AVERAGE BY YEAR PRODUCED """
-p91_yr_avg = p911.groupby('Year', as_index=False)['Price_USD'].mean()
-p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
+# p91_yr_avg = p911.groupby('Year', as_index=False)['Price_USD'].mean()
+# p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
 # # p91_yr_avg.set_index('Year')
 # p91_yr_avg.set_index('Year')['Price_USD'].plot.bar(figsize=(12, 10), linewidth=2.5, color='#800020')
 # plt.title('Mean Price of Porsche 911 by Year', y=1.02, fontsize=22)
@@ -112,6 +158,48 @@ p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
 # plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M'])
 # plt.show()
 """ END """
+
+""" Ferrari Box Plot """
+# f40_sold = df[(df['Model'].str.contains('F40') == True) & (df['Sold'] == 'Sold')]
+# f40_sold.boxplot(column=['Price_USD'], return_type='axes');
+# plt.ylabel('Price')
+# plt.title('Ferrari F40 Sales')
+# plt.legend()
+# plt.ylim(0,2750000)
+# plt.xticks([1], [''])
+# plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M'])
+# plt.show()
+# f40.to_csv('checkcheck.csv')
+
+
+# car_count = {'Country':['US','UK','Italy','Germany','France','Japan','Sweden','Spain','Austria','Belgium','Netherlands','Australia','Switzerland'],
+# 			'Count': [98,45,39,22,22,11,6,2,1,1,1,1,1]}
+
+
+# ccount_df = pd.DataFrame(car_count)
+
+# plt.title('Car Companies Per Country')
+# plt.bar(x=ccount_df['Country'],height=ccount_df['Count'])
+# plt.gca().invert_xaxis()
+# plt.show()
+# USA,98
+# UK 45
+# Italy 39
+# Germany 22
+# France 22
+# Japan 11
+# Sweden 6
+# Spain 2
+# Austria 1
+# Belgium 1
+# Netherlands 1 
+# Australia 1
+# Switzerland 1
+
+
+
+
+
 
 """ MINI BOX PLOT """
 # mini_sold.boxplot(column=['Price_USD'], return_type='axes');
@@ -152,20 +240,92 @@ p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
 # plt.show()
 """ END """
 
-""" ALL CARS SCATTER """
-# american = df[df['Country'] == 'USA']
-# us_16 = american[american['Date'].str.contains('2016')]
+""" mini scatter """
+print(mini_sold['Price_USD'].describe())
+mini_sold = mini[mini['Sold'] == 'Sold']
+mini_not_sold = mini[mini['Sold'] != 'Sold']
+mini_sold['Date']= pd.to_datetime(mini_sold['Date'])
+mini_not_sold['Date']= pd.to_datetime(mini_not_sold['Date'])
+sns.set_style('darkgrid')
+sold_ = sns.scatterplot(x='Date',y='Price_USD',data=mini_sold,s=50,alpha=1,color="green")
+not_sold = sns.scatterplot(x='Date', y='Price_USD',data=mini_not_sold, s=50, alpha=0.5,color='grey')
+plt.title('Mini Sales: 2016 - 2021', y=1.02, fontsize=14)
+sold_.get_figure().autofmt_xdate()
+not_sold.get_figure().autofmt_xdate()
+ plt.ylim(3500000)
+plt.yticks([0,250000,500000,750000,1000000,1250000,1500000,1750000,2000000,2250000,2500000,2750000,3000000,3250000,3500000], ['$0','$250K','$500K','$750K','$1M','$1.25M','$1.5M','$1.75M','$2M','$2.25M','$2.5M','$2.75M','$3M','$3.25M','$3.5M'])
+plt.show()
+plt.ylabel('Price')
+plt.xlabel('Year Sold')
+plt.legend(labels=["Sold","Not Sold"])
+plt.show()
+""" END """
+
+# micro_sold = small_cars[small_cars['Sold'] == 'Sold']
+# micro_not_sold = small_cars[small_cars['Sold'] != 'Sold']
+# micro_sold['Date']= pd.to_datetime(micro_sold['Date'])
+# micro_not_sold['Date']= pd.to_datetime(micro_not_sold['Date'])
+# sns.set_style('darkgrid')
+# sold_ = sns.scatterplot(x='Date',y='Price_USD',data=micro_sold,s=50,alpha=1,color="blue")
+# not_sold = sns.scatterplot(x='Date', y='Price_USD',data=micro_not_sold, s=50, alpha=0.5,color='grey')
+# plt.title('Microcar Sales: 2016 - 2021', y=1.02, fontsize=14)
+# sold_.get_figure().autofmt_xdate()
+# not_sold.get_figure().autofmt_xdate()
+# plt.ylabel('Price')
+# plt.xlabel('Year Sold')
+# plt.legend(labels=["Sold","Not Sold"])
+# plt.show()
+
+
+# """ ALL CARS SCATTER """
+american = small_cars[small_cars['Sold'] == 'Sold']
+# american_2 = df[(df['Country'] == 'USA') & (df['Sold'] == 'Sold')]
+# p911 = df[(df['Country'].str.contains('Germany') == True) & (df['Sold'] == 'Sold')]
+# ital = df[(df['Country'].str.contains('Italy') == True) & (df['Sold'] == 'Sold')]
+
+# uk_16 = american[american['Date'].str.contains('2016')]
+# uk_16_avg = uk_16["Price_USD"].mean()
+# uk_17 = american[american['Date'].str.contains('2017')]
+# uk_17_avg = uk_17["Price_USD"].mean()
+# uk_18 = american[american['Date'].str.contains('2018')]
+# uk_18_avg = uk_18["Price_USD"].mean()
+# uk_19 = american[american['Date'].str.contains('2019')]
+# uk_19_avg = uk_19["Price_USD"].mean()
+# uk_20 = american[american['Date'].str.contains('2020')]
+# uk_20_avg = uk_20["Price_USD"].mean()
+# uk_21 = american[american['Date'].str.contains('2021')]
+# uk_21_avg = uk_21["Price_USD"].mean()
+
+# us_16 = american_2[american_2['Date'].str.contains('2016')]
 # us_16_avg = us_16["Price_USD"].mean()
-# us_17 = american[american['Date'].str.contains('2017')]
+# us_17 = american_2[american_2['Date'].str.contains('2017')]
 # us_17_avg = us_17["Price_USD"].mean()
-# us_18 = american[american['Date'].str.contains('2018')]
+# us_18 = american_2[american_2['Date'].str.contains('2018')]
 # us_18_avg = us_18["Price_USD"].mean()
-# us_19 = american[american['Date'].str.contains('2019')]
+# us_19 = american_2[american_2['Date'].str.contains('2019')]
 # us_19_avg = us_19["Price_USD"].mean()
-# us_20 = american[american['Date'].str.contains('2020')]
+# us_20 = american_2[american_2['Date'].str.contains('2020')]
 # us_20_avg = us_20["Price_USD"].mean()
-# us_21 = american[american['Date'].str.contains('2021')]
+# us_21 = american_2[american_2['Date'].str.contains('2021')]
 # us_21_avg = us_21["Price_USD"].mean()
+
+# p911_16 = p911[p911['Date'].str.contains('2016') == True]
+# p911_16_avg_price = p911_16["Price_USD"].mean()
+
+# p911_17 = p911[p911['Date'].str.contains('2017') == True]
+# p911_17_avg_price = p911_17["Price_USD"].mean()
+
+# p911_18 = p911[p911['Date'].str.contains('2018') == True]
+# p911_18_avg_price = p911_18["Price_USD"].mean()
+
+# p911_19 = p911[p911['Date'].str.contains('2019') == True]
+# p911_19_avg_price = p911_19["Price_USD"].mean()
+
+# p911_20 = p911[p911['Date'].str.contains('2020') == True]
+# p911_20_avg_price = p911_20["Price_USD"].mean()
+
+# p911_21 = p911[p911['Date'].str.contains('2021') == True]
+# p911_21_avg_price = p911_21["Price_USD"].mean()
 
 # ital_16 = ital[ital['Date'].str.contains('2016') == True]
 # ital_16_avg_price = ital_16["Price_USD"].mean()
@@ -186,14 +346,23 @@ p91_yr_sold = p911.groupby('Date', as_index=False)['Price_USD'].mean()
 # ital_21_avg_price = ital_21["Price_USD"].mean()
 
 
-# avg_cars_price = pd.DataFrame({
+avg_cars_price = pd.DataFrame({
+	'UK' : [uk_16_avg,uk_17_avg,uk_18_avg,uk_19_avg,uk_20_avg,uk_21_avg]
 # 	'USA' : [us_16_avg,us_17_avg,us_18_avg,us_19_avg,us_20_avg,us_21_avg],
-# 	# 'Monterey, CA' : [p911_16_avg_price,p911_17_avg_price,p911_18_avg_price,p911_19_avg_price,p911_20_avg_price,p911_21_avg_price],
-# 	# 'Amelia Island, FL' : [ital_16_avg_price,ital_17_avg_price,ital_18_avg_price,ital_19_avg_price,ital_20_avg_price,ital_21_avg_price]
-# 	}, index=[2016,2017,2018,2019,2020,2021])
+# 	# 'Germany' : [p911_16_avg_price,p911_17_avg_price,p911_18_avg_price,p911_19_avg_price,p911_20_avg_price,p911_21_avg_price],
+# 	# 'Italy' : [ital_16_avg_price,ital_17_avg_price,ital_18_avg_price,ital_19_avg_price,ital_20_avg_price,ital_21_avg_price]
+	}, index=[2016,2017,2018,2019,2020,2021])
 
 
-# plt.plot(avg_cars_price)
+# plt.plot(avg_cars_price,marker='.',)
+# # plt.legend()
+# plt.ylim(75000)
+# plt.title('Microcars Average Price')
+# plt.xlabel('Year Sold')
+# # plt.legend(['USA','Germany']);
+# plt.ylabel('Price')
+# plt.gca().invert_yaxis()
+# plt.yticks([0,25000,50000,75000], ['$0','$25K','$50K','$75K'])
 # plt.show()
 
 
