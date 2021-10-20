@@ -18,4 +18,4 @@ Further tests included more affordable cars such as an Austin Mini Cooper.
 
 After running analysis on more cars I concluded that for this tool to be accurate it would need much more data. Further, I would need to implement the code
 into an app (like Shiny) to setup a full user side expirience. Overall, I think the accurate valuation of classic cars is possible but would take much more data
-and many more data features to distinguish clients's cars value. 
+and many more data features to distinguish a cars value. 
