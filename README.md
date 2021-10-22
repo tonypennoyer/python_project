@@ -11,7 +11,7 @@ My first test was valuating a specific luxury sports car, a 1973 Porsche 911 Car
 
 Overall I had about 16 observations of this car being sold which meant my data was quite sparse. Creating a boxplot of this data, there was a range of more than $200K USD. 
 
-This was expected, as old cars have a great variation in condition which affects their value.
+This was expected, as old cars have variation in condition which affects their value.
 
 Further tests included more affordable cars such as an Austin Mini Cooper. 
 
